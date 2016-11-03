@@ -26,31 +26,13 @@ import org.junit.Test;
 public class JavaGlobalDbEndToEndTests {
     private static final String databaseForTestId = "testdb";
     private static final String collectionForTestId = "testcoll";
-    private static final String MASTER_KEY = "HXdFg8Fn2vfu6i5brvRbVWz1KTaQ6aIO2GjL1uXEU6Qq2DudocnpfkRA9hMkjXm2tgtcM7o5KFn4UzcKXmIL1g==";
 
-    // private static final String MASTER_KEY = "[REPLACE WITH YOUR APP MASTER
-    // KEY]";
-    // private static final String HOST = "[REPLACE WITH YOUR APP ENDPOINT, FOR
-    // EXAMPLE 'https://myapp.documents.azure.com:443']";
-    // private static final String HOST_WRITEREGION = "[REPLACE WITH YOUR APP'S
-    // WRITE REGION ENDPOINT, FOR EXAMPLE
-    // 'https://myapp-westus.documents.azure.com:443']";
-    // private static final String HOST_READREGION = "[REPLACE WITH YOUR APP'S
-    // READ REGION ENDPOINT, FOR EXAMPLE
-    // 'https://myapp-eastus.documents.azure.com:443']";
-    // private static final String HOST_READRGION_NAME = "[REPLACE WITH YOUR
-    // APP'S READ REGION Name, FOR EXAMPLE 'East Us']";
+    private static final String MASTER_KEY = "[REPLACE WITH YOUR APP MASTER KEY]";
+    private static final String HOST = "[REPLACE WITH YOUR APP ENDPOINT, FOR EXAMPLE 'https://myapp.documents.azure.com:443']";
+    private static final String HOST_WRITEREGION = "[REPLACE WITH YOUR APP'S WRITE REGION ENDPOINT, FOR EXAMPLE 'https://myapp-westus.documents.azure.com:443']";
+    private static final String HOST_READREGION = "[REPLACE WITH YOUR APP'S READ REGION ENDPOINT, FOR EXAMPLE 'https://myapp-eastus.documents.azure.com:443']";
+    private static final String HOST_READRGION_NAME = "[REPLACE WITH YOUR APP'S READ REGION Name, FOR EXAMPLE 'East Us']";
 
-    // private static final String MASTER_KEY =
-    // "C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==";
-    // private static final String HOST = "https://localhost:443/";
-    // private static final String HOST_WRITEREGION = "https://localhost:443/";
-    // private static final String HOST_READREGION = "https://localhost:1045/";
-    // private static final String HOST_READRGION_NAME = "West US";
-    private static final String HOST = "https://rnagpal-globaldb.documents.azure.com:443/";
-    private static final String HOST_WRITEREGION = "https://rnagpal-globaldb-centralindia.documents.azure.com:443/";
-    private static final String HOST_READREGION = "https://rnagpal-globaldb-westindia.documents.azure.com:443/";
-    private static final String HOST_READRGION_NAME = "West India";
     private DocumentClient client;
     private Database databaseForTest;
     private DocumentCollection collectionForTest;

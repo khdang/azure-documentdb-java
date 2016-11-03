@@ -67,7 +67,6 @@ public class HelloWorld {
     // We'll use Gson for POJO <=> JSON serialization for this sample.
     // Codehaus' Jackson is another great POJO <=> JSON serializer.
     private static Gson gson = new Gson();
-
     public static void main(String[] args) throws DocumentClientException,
             IOException {
         // Instantiate a DocumentClient w/ your DocumentDB Endpoint and AuthKey.
@@ -76,8 +75,13 @@ public class HelloWorld {
                 ConsistencyLevel.Session);
 
         // Start from a clean state (delete database in case it already exists).
-        documentClient.deleteDatabase("dbs/" + DATABASE_ID, null);
-        
+        try {
+            documentClient.deleteDatabase("dbs/" + DATABASE_ID, null);
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         // Define a new database using the id above.
         Database myDatabase = new Database();
         myDatabase.setId(DATABASE_ID);
@@ -85,6 +89,7 @@ public class HelloWorld {
         // Create a new database.
         myDatabase = documentClient.createDatabase(myDatabase, null)
                 .getResource();
+
 
         System.out.println("Created a new database:");
         System.out.println(myDatabase.toString());
@@ -101,7 +106,7 @@ public class HelloWorld {
 
         // Create a new collection.
         myCollection = documentClient.createCollection(
-                myDatabase.getSelfLink(), myCollection, requestOptions)
+                "dbs/" + DATABASE_ID, myCollection, requestOptions)
                 .getResource();
 
         System.out.println("Created a new collection:");
@@ -111,73 +116,73 @@ public class HelloWorld {
 
         // Create an object, serialize it into JSON, and wrap it into a
         // document.
-        SomePojo andrewPojo = new SomePojo("123", "Andrew Liu", "andrl [at] microsoft.com");
-        String andrewJson = gson.toJson(andrewPojo);
-        Document andrewDocument = new Document(andrewJson);
+        SomePojo allenPojo = new SomePojo("123", "Allen Brewer", "allen [at] contoso.com");
+        String allenJson = gson.toJson(allenPojo);
+        Document allenDocument = new Document(allenJson);
 
         // Create the 1st document.
-        andrewDocument = documentClient.createDocument(
-                myCollection.getSelfLink(), andrewDocument, null, false)
+        allenDocument = documentClient.createDocument(
+                "dbs/" + DATABASE_ID + "/colls/" + COLLECTION_ID, allenDocument, null, false)
                 .getResource();
 
         System.out.println("Created 1st document:");
-        System.out.println(andrewDocument.toString());
+        System.out.println(allenDocument.toString());
         System.out.println("Press any key to continue..");
         System.in.read();
 
         // Create another object, serialize it into JSON, and wrap it into a
         // document.
-        SomePojo mimiPojo = new SomePojo("456", "Mimi Gentz",
-                "mimig [at] microsoft.com");
-        String somePojoJson = gson.toJson(mimiPojo);
-        Document mimiDocument = new Document(somePojoJson);
+        SomePojo lisaPojo = new SomePojo("456", "Lisa Andrews",
+                "lisa [at] contoso.com");
+        String somePojoJson = gson.toJson(lisaPojo);
+        Document lisaDocument = new Document(somePojoJson);
 
         // Create the 2nd document.
-        mimiDocument = documentClient.createDocument(
-                myCollection.getSelfLink(), mimiDocument, null, false)
+        lisaDocument = documentClient.createDocument(
+                "dbs/" + DATABASE_ID + "/colls/" + COLLECTION_ID, lisaDocument, null, false)
                 .getResource();
 
         System.out.println("Created 2nd document:");
-        System.out.println(mimiDocument.toString());
+        System.out.println(lisaDocument.toString());
         System.out.println("Press any key to continue..");
         System.in.read();
 
         // Query documents
         List<Document> results = documentClient
                 .queryDocuments(
-                        myCollection.getSelfLink(),
-                        "SELECT * FROM myCollection WHERE myCollection.email = 'andrl [at] microsoft.com'",
+                        "dbs/" + DATABASE_ID + "/colls/" + COLLECTION_ID,
+                        "SELECT * FROM myCollection WHERE myCollection.email = 'allen [at] contoso.com'",
                         null).getQueryIterable().toList();
 
-        System.out.println("Query document where e-mail address = 'andrl [at] microsoft.com':");
+        System.out.println("Query document where e-mail address = 'allen [at] contoso.com':");
         System.out.println(results.toString());
         System.out.println("Press any key to continue..");
         System.in.read();
 
-        // Replace Document Andrew with Shireesh
-        andrewPojo = gson.fromJson(results.get(0).toString(), SomePojo.class);
-        andrewPojo.setName("Shireesh Thota");
-        andrewPojo.setEmail("Shireesh.Thota [at] microsoft.com");
+        // Replace Document Allen with Percy
+        allenPojo = gson.fromJson(results.get(0).toString(), SomePojo.class);
+        allenPojo.setName("Percy Bowman");
+        allenPojo.setEmail("Percy Bowman [at] contoso.com");
 
-        andrewDocument = documentClient.replaceDocument(
-                andrewDocument.getSelfLink(),
-                new Document(gson.toJson(andrewPojo)), null)
+        allenDocument = documentClient.replaceDocument(
+                allenDocument.getSelfLink(),
+                new Document(gson.toJson(allenPojo)), null)
                 .getResource();
 
-        System.out.println("Replaced Andrew's document with Shireesh's contact information");
-        System.out.println(andrewDocument.toString());
+        System.out.println("Replaced Allen's document with Percy's contact information");
+        System.out.println(allenDocument.toString());
         System.out.println("Press any key to continue..");
         System.in.read();
 
-        // Delete Shireesh's Document
-        documentClient.deleteDocument(andrewDocument.getSelfLink(), null);
+        // Delete Percy's Document
+        documentClient.deleteDocument(allenDocument.getSelfLink(), null);
 
-        System.out.println("Deleted Shireesh's document");
+        System.out.println("Deleted Percy's document");
         System.out.println("Press any key to continue..");
         System.in.read();
 
         // Delete Database
-        documentClient.deleteDatabase(myDatabase.getSelfLink(), null);
+        documentClient.deleteDatabase("dbs/" + DATABASE_ID, null);
 
         System.out.println("Deleted database");
         System.out.println("Press any key to continue..");
